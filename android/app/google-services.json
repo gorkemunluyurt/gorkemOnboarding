@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "928535439266",
+    "project_id": "gorkemonboarding-9c1eb",
+    "storage_bucket": "gorkemonboarding-9c1eb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:928535439266:android:6c94ccce919d54ec22f4fb",
+        "android_client_info": {
+          "package_name": "com.gorkemproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "928535439266-frtliq8ru11tdrupokdgethlbvlvtd9k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gorkemproject",
+            "certificate_hash": "bad7b6a195852502997876614e35fcae6bc47243"
+          }
+        },
+        {
+          "client_id": "928535439266-d95k2ngujap4278bv576evi1albta9d9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAm4YWDTC0ZQ37WI3TO-iwEtYjpwxmF6xY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "928535439266-d95k2ngujap4278bv576evi1albta9d9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
