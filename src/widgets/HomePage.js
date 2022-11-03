@@ -1,4 +1,4 @@
-import { View, Text, Alert, TouchableOpacity, ScrollVie, ImageBackground, ScrollView, FlatList, Modal, Button } from "react-native";
+import { View, Text, Alert, TouchableOpacity, ScrollVie, ImageBackground, ScrollView, FlatList, Modal, Button, Dimensions } from "react-native";
 import React, { useEffect, useState } from "react";
 import { firebase } from "@react-native-firebase/auth";
 import firestore from '@react-native-firebase/firestore';
@@ -6,6 +6,7 @@ import IconFontIsto from "react-native-vector-icons/Fontisto"
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import LinearGradient from 'react-native-linear-gradient';
+import { HomePageStyle } from "./styles";
 
 
 export default HomePage = () => {
@@ -13,16 +14,10 @@ export default HomePage = () => {
   const [likesList, setLikesList] = useState([])
   const [userId, setUserId] = useState(0)
   const [showWarning, setShowWarning] = useState(false)
-  const [selectedUser, setSelectedUser] = useState({name:"",id:""})
+  const [selectedUser, setSelectedUser] = useState({ name: "", id: "" })
   const setUserConnect = async (id) => {
     setShowWarning(false)
     try {
-
-
-      console.log(id);
-      //newArray.push(id);
-      console.log("Çalıştı")
-
       await firestore().collection("Users").doc(id).set({
         "likes": firestore.FieldValue.arrayUnion(...[
           firebase.auth().currentUser.uid
@@ -31,79 +26,75 @@ export default HomePage = () => {
     } catch (e) {
       console.log(e.message);
     }
-   
+
   }
   const AllUserPage = () => {
     const renderFlatListItem = ({ item, index }) => {
 
       return (
-        <TouchableOpacity onPress={() => {
-          setShowWarning(true);
-          setSelectedUser({name:item.userName,id:item.id})
-          /*Alert.alert(
-            "",
-            item.userName + " adlı kullanıcıya istek göndermek istediğine emin misin?",
 
-            [
-              {
-                text: "Hayır"
-              },
-              { text: "Evet", onPress: () => setUserConnect(item.id) }
-            ]
-          );*/
-        }
-        
-        }>
 
-          <ImageBackground imageStyle={{ borderRadius: 15 }} source={{ uri: item.profilePhoto }} style={{ margin: 20, height: 170, width: 170 }} resizeMode="cover" >
-            <LinearGradient start={{ x: 1, y: 0 }} end={{ x: 0, y: 1 }} colors={['rgba(0, 0, 0, 0)',
-              'rgba(132, 74, 255, 0.5)',
-            ]} style={{ flex: 1, justifyContent: 'center',borderRadius:15 }}>
-              <View style={{ justifyContent: "flex-end", flex: 1, padding: 5 }}>
-                <Text style={{ color: "white", fontWeight: "bold", fontSize: 16 }}>{item.userName}</Text>
-                <Text style={{ color: "white", fontSize: 12 }}>{item.birthDay}</Text>
-              </View>
-            </LinearGradient>
-          </ImageBackground>
+        <View style={HomePageStyle.imageBackgroundContainer}>
+          <TouchableOpacity style={HomePageStyle.imageButtonStyle} onPress={() => {
+            setShowWarning(true);
+            setSelectedUser({ name: item.userName, id: item.id })
+          }
 
-        </TouchableOpacity>
+          }>
+            <ImageBackground imageStyle={{ borderRadius: 15 }} source={{ uri: item.profilePhoto }} style={{ flex: 1 }} resizeMode="cover" >
+
+              <LinearGradient start={{ x: 1, y: 0 }} end={{ x: 0, y: 1 }} colors={['rgba(0, 0, 0, 0)',
+                'rgba(132, 74, 255, 0.5)',
+              ]} style={HomePageStyle.linearGradientStyle}>
+                <View style={HomePageStyle.textContainer}>
+                  <Text style={HomePageStyle.text}>{item.userName}</Text>
+                  <Text style={HomePageStyle.dateText}>{item.birthDay}</Text>
+                </View>
+              </LinearGradient>
+
+            </ImageBackground>
+          </TouchableOpacity>
+        </View>
+
+
       )
     }
-    
-    const customAlert = ()=>{
-      return(
-        <Modal transparent={true} visible={showWarning} onRequestClose={()=>setShowWarning(false)}>
-          <View style={{justifyContent:"center",alignItems:"center",backgroundColor:"#00000099",flex:1}}>
-          <View style={{width:300,height:250,borderRadius:20,backgroundColor:"white",alignItems:"center",justifyContent:"center",padding:10}}>
-          <Text style={{marginBottom:20,color:"black",fontSize:16,fontWeight:"bold",textAlign:"center"}}>{selectedUser.name}  adlı kullanıcıya istek göndermek istediğine emin misin?</Text>
-          <TouchableOpacity onPress={()=>{
-            setShowWarning(false)
-            setUserConnect(selectedUser.id)
-            
-          }} style={{marginBottom:5,height:40,width:"100%",backgroundColor:"rgba(132, 74, 255, 1)",alignItems:"center",borderRadius:15,justifyContent:"center"}}>
-            <Text style={{color:"white"}}>Gönder</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={()=>{
-              setShowWarning(false)
-            }} style={{height:40,width:"100%",backgroundColor:"white",alignItems:"center",borderRadius:15,justifyContent:"center"}}>
-            <Text style={{color:"black"}}>Vazgeç</Text>
-            </TouchableOpacity>
+
+    const customAlert = () => {
+      return (
+        <Modal transparent={true} visible={showWarning} onRequestClose={() => setShowWarning(false)}>
+          <View style={HomePageStyle.customAlertAligment}>
+            <View style={HomePageStyle.customAlertBox}>
+              <Text style={HomePageStyle.customAlertText}>{selectedUser.name}  adlı kullanıcıya istek göndermek istediğine emin misin?</Text>
+              <TouchableOpacity onPress={() => {
+                setShowWarning(false)
+                setUserConnect(selectedUser.id)
+
+              }} style={HomePageStyle.customAlertGonderButtonStyle}>
+                <Text style={{ color: "white" }}>Gönder</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => {
+                setShowWarning(false)
+              }} style={HomePageStyle.customAlerVazgecButtonStyle}>
+                <Text style={{ color: "black" }}>Vazgeç</Text>
+              </TouchableOpacity>
             </View>
           </View>
-            
-          </Modal>
+
+        </Modal>
       )
     }
     return (
       <View style={{ flex: 1 }}>
         {
-          showWarning ? 
-          customAlert()
-          :
-          ""
+          showWarning ?
+            customAlert()
+            :
+            ""
         }
-        
+
         <FlatList
+
           data={users}
           keyExtractor={users.id}     //has to be unique   
           renderItem={renderFlatListItem} //method to render the data in the way you want using styling u need
@@ -111,67 +102,43 @@ export default HomePage = () => {
           numColumns={2}
 
         />
-
-
-
       </View>
     );
   }
-
   const renderFlatList2Item = ({ item, index }) => {
-
     return (
+      <View style={HomePageStyle.imageBackgroundContainer}>
 
-      <ImageBackground imageStyle={{ borderRadius: 15 }} source={{ uri: item.profilePhoto }} style={{ margin: 20, height: 170, width: 170 }} resizeMode="cover" >
-        <LinearGradient start={{ x: 1, y: 0 }} end={{ x: 0, y: 1 }} colors={['rgba(0, 0, 0, 0)',
-              'rgba(214, 5, 43, 0.5)',
-            ]} style={{ flex: 1, justifyContent: 'center',borderRadius:15}}>
-        <View style={{ justifyContent: "flex-end", flex: 1, padding: 5 }}>
-          <Text style={{ color: "white", fontWeight: "bold", fontSize: 16 }}>{item.userName}</Text>
-          <Text style={{ color: "white", fontSize: 12 }}>{item.birthDay}</Text>
-        </View>
-        </LinearGradient>
-      </ImageBackground>
+        <ImageBackground imageStyle={{ borderRadius: 15 }} source={{ uri: item.profilePhoto }} style={{ flex: 1 }} resizeMode="cover" >
+          <LinearGradient start={{ x: 1, y: 0 }} end={{ x: 0, y: 1 }} colors={['rgba(0, 0, 0, 0)',
+            'rgba(214, 5, 43, 0.5)',
+          ]} style={HomePageStyle.linearGradientStyle}>
+            <View style={HomePageStyle.textContainer}>
+              <Text style={HomePageStyle.text}>{item.userName}</Text>
+              <Text style={HomePageStyle.dateText}>{item.birthDay}</Text>
+            </View>
+          </LinearGradient>
+        </ImageBackground>
+      </View>
     )
 
   }
   const UserPage = () => {
     return (
       <View style={{ flex: 1 }}>
-        
+
         <FlatList
           data={likesList}
-          keyExtractor={users.id}     //has to be unique   
-          renderItem={renderFlatList2Item} //method to render the data in the way you want using styling u need
+          keyExtractor={users.id}
+          renderItem={renderFlatList2Item}
           horizontal={false}
           numColumns={2}
 
         />
-
-
-
       </View>
     );
   }
-  /*const getUsersData = async () => {
-    try {
-      const data = await firestore().collection("Users").get();
-      getUserId()
-      console.log(data.docs);
-      setUsers(
-        data.docs.map((doc) => {
-          console.log(doc.data.userName);
-          return {
-            ...doc.data(), id: doc.id
-          }
-        })
 
-      )
-      console.log(users);
-    } catch (e) {
-      Alert.alert("Hata", e.message);
-    }
-  }*/
 
   const Tab = createBottomTabNavigator();
   function MyTabBar({ state, descriptors, navigation, index }) {
@@ -191,7 +158,7 @@ export default HomePage = () => {
           const isFocused = state.index === index;
 
           const onPress = () => {
-            
+
             const event = navigation.emit({
               type: 'tabPress',
               target: route.key,
@@ -200,23 +167,18 @@ export default HomePage = () => {
 
             if (!isFocused && !event.defaultPrevented) {
               getData()
-              // The `merge: true` option makes sure that the params inside the tab screen are preserved
+
               let sayi = 0;
-              console.log("Çalıştı")
+
 
               for (i = 0; i < users.length; i++) {
-                console.log(users[i].id + "deneme" + currentId);
                 if (currentId === users[i].id) {
-                  console.log("Bulundu " + i)
                   sayi = i;
                 }
               }
               setUserId(sayi);
 
               let list = [];
-
-              console.log("Sıra " + userId);
-              console.log(users[userId]);
               users.map(user => {
                 users[userId].likes.map(like => {
                   if (like == user.id) {
@@ -257,14 +219,14 @@ export default HomePage = () => {
       </View>
     );
   }
-  getData=async()=>{
-    
+  getData = async () => {
+
     await firestore().collection("Users").onSnapshot((querySnapshot) => {
       let sayac = 0;
       setUsers(
         querySnapshot.docs.map((doc) => {
           if (doc.id == currentId) {
-            console.log(sayac + "Bulundu adı " + doc.data().userName)
+
             setUserId(sayac);
           }
           sayac++;
@@ -276,16 +238,10 @@ export default HomePage = () => {
       )
     })
   }
- 
+
   const currentId = firebase.auth().currentUser.uid
   useEffect(() => {
-    
-    
     getData()
-    
-
-
-
   }, [])
   return (
 
