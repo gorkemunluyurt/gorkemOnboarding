@@ -27,7 +27,7 @@ export default UserName = ({ navigation }) => {
                         </TextInput>
                         <TouchableOpacity onPress={() => {
                             if (email.length <= 0) {
-                                Alert.alert("Hata", "Lütfen kullanıcı adı giriniz");
+                                Alert.alert("Hata", "Lütfen email adresi giriniz");
                             }
                             else navigation.navigate('UserBirthDate', { email: email });
                         }} style={CreateUserPageStyle.createUserButtonStyle}>
