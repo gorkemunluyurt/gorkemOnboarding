@@ -52,7 +52,7 @@ export default UserBirthDate = ({ navigation, route }) => {
                         <TouchableOpacity onPress={() => {
                             if (selectedState) {
                                 navigation.navigate("UserProfilePhoto", {
-                                    userName: route.params.userName,
+                                    email: route.params.email,
                                     userBirthDate: (birthTime.getFullYear() + "/" + (birthTime.getMonth() + 1) + "/" + birthTime.getDate())
                                 })
                             }
@@ -64,8 +64,6 @@ export default UserBirthDate = ({ navigation, route }) => {
 
                 </View>
             </View>
-
-
         </View>
     );
 }

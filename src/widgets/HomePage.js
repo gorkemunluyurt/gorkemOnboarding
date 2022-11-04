@@ -1,14 +1,10 @@
-import { View, Text, Alert, TouchableOpacity, ScrollVie, ImageBackground, ScrollView, FlatList, Modal, Button, Dimensions } from "react-native";
+import { View, Text, TouchableOpacity, ImageBackground, FlatList, Modal } from "react-native";
 import React, { useEffect, useState } from "react";
 import { firebase } from "@react-native-firebase/auth";
 import firestore from '@react-native-firebase/firestore';
-import IconFontIsto from "react-native-vector-icons/Fontisto"
-import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import LinearGradient from 'react-native-linear-gradient';
 import { HomePageStyle } from "./styles";
-
-
 export default HomePage = () => {
   const [users, setUsers] = useState([])
   const [likesList, setLikesList] = useState([])
@@ -26,23 +22,17 @@ export default HomePage = () => {
     } catch (e) {
       console.log(e.message);
     }
-
   }
   const AllUserPage = () => {
     const renderFlatListItem = ({ item, index }) => {
-
       return (
-
-
         <View style={HomePageStyle.imageBackgroundContainer}>
           <TouchableOpacity style={HomePageStyle.imageButtonStyle} onPress={() => {
             setShowWarning(true);
             setSelectedUser({ name: item.userName, id: item.id })
           }
-
           }>
             <ImageBackground imageStyle={{ borderRadius: 15 }} source={{ uri: item.profilePhoto }} style={{ flex: 1 }} resizeMode="cover" >
-
               <LinearGradient start={{ x: 1, y: 0 }} end={{ x: 0, y: 1 }} colors={['rgba(0, 0, 0, 0)',
                 'rgba(132, 74, 255, 0.5)',
               ]} style={HomePageStyle.linearGradientStyle}>
@@ -51,25 +41,22 @@ export default HomePage = () => {
                   <Text style={HomePageStyle.dateText}>{item.birthDay}</Text>
                 </View>
               </LinearGradient>
-
             </ImageBackground>
           </TouchableOpacity>
         </View>
-
-
       )
     }
-
     const customAlert = () => {
       return (
         <Modal transparent={true} visible={showWarning} onRequestClose={() => setShowWarning(false)}>
           <View style={HomePageStyle.customAlertAligment}>
             <View style={HomePageStyle.customAlertBox}>
-              <Text style={HomePageStyle.customAlertText}>{selectedUser.name}  adlı kullanıcıya istek göndermek istediğine emin misin?</Text>
+              <Text style={HomePageStyle.customAlertText}>
+                {selectedUser.name}  adlı kullanıcıya istek göndermek istediğine emin misin?
+              </Text>
               <TouchableOpacity onPress={() => {
                 setShowWarning(false)
                 setUserConnect(selectedUser.id)
-
               }} style={HomePageStyle.customAlertGonderButtonStyle}>
                 <Text style={{ color: "white" }}>Gönder</Text>
               </TouchableOpacity>
@@ -80,7 +67,6 @@ export default HomePage = () => {
               </TouchableOpacity>
             </View>
           </View>
-
         </Modal>
       )
     }
@@ -92,7 +78,6 @@ export default HomePage = () => {
             :
             ""
         }
-
         <FlatList
 
           data={users}
@@ -100,7 +85,6 @@ export default HomePage = () => {
           renderItem={renderFlatListItem} //method to render the data in the way you want using styling u need
           horizontal={false}
           numColumns={2}
-
         />
       </View>
     );
@@ -108,7 +92,6 @@ export default HomePage = () => {
   const renderFlatList2Item = ({ item, index }) => {
     return (
       <View style={HomePageStyle.imageBackgroundContainer}>
-
         <ImageBackground imageStyle={{ borderRadius: 15 }} source={{ uri: item.profilePhoto }} style={{ flex: 1 }} resizeMode="cover" >
           <LinearGradient start={{ x: 1, y: 0 }} end={{ x: 0, y: 1 }} colors={['rgba(0, 0, 0, 0)',
             'rgba(214, 5, 43, 0.5)',
@@ -121,29 +104,22 @@ export default HomePage = () => {
         </ImageBackground>
       </View>
     )
-
   }
   const UserPage = () => {
     return (
       <View style={{ flex: 1 }}>
-
         <FlatList
           data={likesList}
           keyExtractor={users.id}
           renderItem={renderFlatList2Item}
           horizontal={false}
           numColumns={2}
-
         />
       </View>
     );
   }
-
-
   const Tab = createBottomTabNavigator();
   function MyTabBar({ state, descriptors, navigation, index }) {
-
-
     return (
       <View style={{ flexDirection: 'row' }}>
         {state.routes.map((route, index) => {
@@ -154,30 +130,23 @@ export default HomePage = () => {
               : options.title !== undefined
                 ? options.title
                 : route.name;
-
           const isFocused = state.index === index;
-
           const onPress = () => {
-
             const event = navigation.emit({
               type: 'tabPress',
               target: route.key,
               canPreventDefault: true,
             });
-
             if (!isFocused && !event.defaultPrevented) {
               getData()
 
               let sayi = 0;
-
-
               for (i = 0; i < users.length; i++) {
                 if (currentId === users[i].id) {
                   sayi = i;
                 }
               }
               setUserId(sayi);
-
               let list = [];
               users.map(user => {
                 users[userId].likes.map(like => {
@@ -186,19 +155,16 @@ export default HomePage = () => {
                   }
                 })
               })
-
               setLikesList(list);
               navigation.navigate({ name: route.name, merge: true });
             }
           };
-
           const onLongPress = () => {
             navigation.emit({
               type: 'tabLongPress',
               target: route.key,
             });
           };
-
           return (
             <TouchableOpacity
               key={index}
@@ -220,13 +186,11 @@ export default HomePage = () => {
     );
   }
   getData = async () => {
-
     await firestore().collection("Users").onSnapshot((querySnapshot) => {
       let sayac = 0;
       setUsers(
         querySnapshot.docs.map((doc) => {
           if (doc.id == currentId) {
-
             setUserId(sayac);
           }
           sayac++;
@@ -234,22 +198,17 @@ export default HomePage = () => {
             ...doc.data(), id: doc.id
           }
         })
-
       )
     })
   }
-
   const currentId = firebase.auth().currentUser.uid
   useEffect(() => {
     getData()
   }, [])
   return (
-
     <Tab.Navigator tabBar={(props) => <MyTabBar {...props} />}>
       <Tab.Screen name="AllUserPage" options={{ headerShown: false, tabBarLabel: "Kullanıcılar" }} component={AllUserPage} />
       <Tab.Screen name="UserPage" options={{ headerShown: false, tabBarLabel: "Beğenenler" }} component={UserPage} />
     </Tab.Navigator>
-
   );
-
 }

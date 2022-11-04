@@ -11,7 +11,7 @@ export default UserEmailandPassword = ({ navigation, route }) => {
             if (email.length > 0 && password.length > 0) {
                 const auth = await firebase.auth().createUserWithEmailAndPassword(email, password);
                 await firestore().collection("Users").doc(auth.user.uid).set({
-                    "userName": route.params.userName,
+                    "userName": route.params.email,
                     "birthDay": route.params.userBirthDate,
                     "profilePhoto": route.params.profilePhoto,
                     "likes": []
@@ -47,17 +47,9 @@ export default UserEmailandPassword = ({ navigation, route }) => {
                     </View>
                     <View style={{ flex: 4, width: "100%", alignItems: "center" }}>
                         <View style={{ marginBottom: 30 }}>
-                            <Text style={{ fontSize: 16, color: "white", textAlign: "center" }}>Email ve en az 6 karakterden oluşan</Text>
+                            <Text style={{ fontSize: 16, color: "white", textAlign: "center" }}>En az 6 karakterden oluşan</Text>
                             <Text style={{ fontSize: 16, color: "white", textAlign: "center" }}>bir parola girmelisin</Text>
                         </View>
-                        <TextInput placeholder="Email"
-                            placeholderTextColor={"black"}
-                            onChangeText={(value) => setEmail(value)}
-                            value={email}
-
-                            style={CreateUserPageStyle.createUserInputStyle}
-                        >
-                        </TextInput>
                         <TextInput placeholder="Parola"
                             placeholderTextColor={"black"}
                             secureTextEntry={true}
@@ -85,7 +77,7 @@ export default UserEmailandPassword = ({ navigation, route }) => {
                         <TouchableOpacity onPress={() => {
                             if (isSelected) {
                                 if (email != null && password != null) {
-                                    createUser(email, password);
+                                    createUser(route.params.email, password);
                                 }
                             }
 

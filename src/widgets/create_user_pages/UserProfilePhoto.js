@@ -62,7 +62,7 @@ export default UserProfilePhoto = ({ navigation, route }) => {
                             if (selectedState) {
                                 const date = route.params.userBirthDate;
                                 navigation.navigate("UserEmailandPassword", {
-                                    userName: route.params.userName,
+                                    email: route.params.email,
                                     userBirthDate: route.params.userBirthDate,
                                     profilePhoto: downloadUrl
                                 })
@@ -78,8 +78,6 @@ export default UserProfilePhoto = ({ navigation, route }) => {
 
                 </View>
             </View>
-
-
         </View>
     );
 }
